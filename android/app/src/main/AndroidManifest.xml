@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
+<<<<<<< HEAD
         android:label="mysopaan"
+=======
+        android:label="sopaan_app"
+>>>>>>> b1fb798d5d2e5c0f3266e89e5f61b4abe7ed915f
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

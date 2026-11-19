@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 
 void main() {
+=======
+import 'package:get/get.dart';
+import 'splash/splash_screen.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+>>>>>>> b1fb798d5d2e5c0f3266e89e5f61b4abe7ed915f
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+<<<<<<< HEAD
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -117,6 +126,18 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
+=======
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      title: 'Sopaan',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const SplashScreen(),
+>>>>>>> b1fb798d5d2e5c0f3266e89e5f61b4abe7ed915f
     );
   }
 }

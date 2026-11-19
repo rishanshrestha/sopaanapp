@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: mysopaan
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
@@ -34,10 +35,27 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+=======
+name: sopaan_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get: ^4.6.6
+  cupertino_icons: ^2.0.0
+  image_picker: ^1.2.3
+>>>>>>> b1fb798d5d2e5c0f3266e89e5f61b4abe7ed915f
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+<<<<<<< HEAD
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -87,3 +105,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+=======
+  flutter_lints: ^6.0.0
+
+flutter:
+
+  uses-material-design: true
+  assets:
+    - assets/images/logo.jpeg
+>>>>>>> b1fb798d5d2e5c0f3266e89e5f61b4abe7ed915f
