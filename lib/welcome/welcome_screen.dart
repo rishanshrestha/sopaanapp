@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../components/primary_button.dart';
 import '../components/secondary_button.dart';
-import 'login.dart';
-import 'signup.dart';
+import '../authentication/login.dart';
+import '../authentication/signup.dart';
 
 // ============================================================
 // DESIGN TOKENS

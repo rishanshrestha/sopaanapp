@@ -8,7 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 //import 'forgot.dart';
 //import 'services/firestore_service.dart';
 //import 'signup.dart';
-import 'welcome_screen.dart' show SopaanLogo;
+import '../welcome/welcome_screen.dart' show SopaanLogo;
 //import 'wrapper.dart';
 
 // Backward compatibility alias
