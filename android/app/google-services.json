@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "640317960331",
+    "project_id": "sopaan-app-bae09",
+    "storage_bucket": "sopaan-app-bae09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640317960331:android:7d68cfdd12649f3538a48e",
+        "android_client_info": {
+          "package_name": "com.example.sopaan_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOz-ZiPkG_7Mci2EAY7RfM8y14PctGm1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
