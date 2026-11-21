@@ -5,11 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-//import 'forgot.dart';
-//import 'services/firestore_service.dart';
-//import 'signup.dart';
+import 'forget_password.dart';
+import 'signup.dart';
 import '../welcome/welcome_screen.dart' show SopaanLogo;
-//import 'wrapper.dart';
+import 'services/firestore_service.dart';
+import 'wrapper.dart';
 
 // Backward compatibility alias
 typedef Login = LoginScreen;
@@ -179,11 +179,11 @@ class _LoginScreenState extends State<LoginScreen>
         password: _passwordController.text.trim(),
       );
 
-      //await FirestoreService.syncCurrentUser();
+      await FirestoreService.syncCurrentUser();
 
       if (!mounted) return;
 
-      //Get.offAll(() => const Wrapper());
+      Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch (e) {
       debugPrint('AUTH ERROR: ${e.code} | ${e.message}');
       _showMessage('${_messageFor(e)} (${e.code})');
@@ -225,11 +225,11 @@ class _LoginScreenState extends State<LoginScreen>
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-      //await FirestoreService.syncCurrentUser();
+      await FirestoreService.syncCurrentUser();
 
       if (!mounted) return;
 
-      //Get.offAll(() => const Wrapper());
+      Get.offAll(() => const Wrapper());
     } on GoogleSignInException catch (e) {
       if (e.code == GoogleSignInExceptionCode.canceled) return;
       debugPrint('GOOGLE SIGN-IN ERROR: ${e.code} | ${e.description}');
@@ -479,7 +479,7 @@ class _LoginScreenState extends State<LoginScreen>
                 onPressed: _loading
                     ? null
                     : () {
-                  // Get.to(() => const Forgot());
+                  Get.to(() => const ForgotPasswordScreen());
                 },
                 style: TextButton.styleFrom(
                   foregroundColor: _C.tealDeep,
@@ -547,7 +547,7 @@ class _LoginScreenState extends State<LoginScreen>
                   onPressed: _loading
                       ? null
                       : () {
-                    // Get.to(() => const Signup());
+                    Get.to(() => const Signup());
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: _C.tealDeep,

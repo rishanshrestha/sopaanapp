@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../authentication/login.dart';
 import '../components/primary_button.dart';
 import '../components/secondary_button.dart';
-import '../authentication/login.dart';
-import '../authentication/signup.dart';
+
+// Backward compatibility alias
+typedef Login = LoginScreen;
 
 
 // ============================================================
@@ -17,7 +19,6 @@ class _C {
   static const indigo = Color(0xFF5B6CFF);
   static const amber = Color(0xFFF79009);
 
-  static const navy = Color(0xFF0A1A2F);
   static const ink = Color(0xFF0B1F33);
   static const muted = Color(0xFF667A8C);
   static const faint = Color(0xFF98A2B3);
@@ -177,7 +178,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             PrimaryButton(
                               label: 'Create an account',
                               onTap: () {
-                                Get.to(() => const Signup());
+                                Get.to(() => const LoginScreen());
                               },
                             ),
 
