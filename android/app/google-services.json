@@ -12,7 +12,20 @@
           "package_name": "com.example.sopaan_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "640317960331-pc7oq572hbh7fa04ajvbufj9qvt27405.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sopaan_app",
+            "certificate_hash": "825f8f67a0100f35007ae2d0c638e6a626cb5059"
+          }
+        },
+        {
+          "client_id": "640317960331-uf0rpr7ao5q69aisoqf5bvlcv8hpbi5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCOz-ZiPkG_7Mci2EAY7RfM8y14PctGm1s"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640317960331-uf0rpr7ao5q69aisoqf5bvlcv8hpbi5u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "640317960331-pnnfp6jbt9p3lebvvthc5hu2j6n26rcr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sopaanApp"
+              }
+            }
+          ]
         }
       }
     }

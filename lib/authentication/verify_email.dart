@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../onboarding/onboarding_screen.dart';
+import '../home/homepage.dart';
 import '../welcome/welcome_screen.dart';
 
 class VerifyEmail extends StatefulWidget {
@@ -26,7 +26,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     if (isEmailVerified) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          Get.offAll(() => const OnboardingScreen());
+          Get.offAll(() => const HomeScreen());
         }
       });
     } else {
@@ -56,7 +56,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     if (verified) {
       timer?.cancel();
       setState(() => isEmailVerified = true);
-      Get.offAll(() => const OnboardingScreen());
+      Get.offAll(() => const HomeScreen());
     } else {
       setState(() => isEmailVerified = false);
     }

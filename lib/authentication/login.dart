@@ -207,9 +207,9 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       if (!_googleInitialized) {
         await GoogleSignIn.instance.initialize(
-          // Web Client ID from Firebase Console
+          // Web Client ID from Firebase Console (client_type 3)
           serverClientId:
-          '764853879315-25tjidsksmklsc7o9hfe4g42a9epclqk.apps.googleusercontent.com',
+          '640317960331-uf0rpr7ao5q69aisoqf5bvlcv8hpbi5u.apps.googleusercontent.com',
         );
         _googleInitialized = true;
       }

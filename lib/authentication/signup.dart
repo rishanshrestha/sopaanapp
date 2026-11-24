@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 
 import 'login.dart';
 import '../welcome/welcome_screen.dart' show SopaanLogo;
-//import 'wrapper.dart';
+import 'services/firestore_service.dart';
+import 'wrapper.dart';
 
 // Backward compatibility alias
 typedef Signup = RegisterScreen;
@@ -207,8 +208,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: _password.text.trim(),
       );
 
+      final nameTrimmed = _name.text.trim();
+
       // Save the full name on the Firebase user profile.
-      await credential.user?.updateDisplayName(_name.text.trim());
+      await credential.user?.updateDisplayName(nameTrimmed);
+
+      // Sync newly registered user to Firestore
+      await FirestoreService.syncCurrentUser(displayName: nameTrimmed);
 
       debugPrint('REGISTER: Registration successful');
 
@@ -220,7 +226,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (!mounted) return;
 
-      // Get.offAll(() => const Wrapper());
+      Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch (e) {
       debugPrint('REGISTER ERROR: ${e.code} | ${e.message}');
 
