@@ -271,97 +271,97 @@ class _SkillsSectionState extends State<SkillsSection> {
           ),
           child: _skills.isEmpty
               ? const Column(
-                  children: [
-                    SizedBox(height: 12),
-                    Icon(Icons.style_outlined, size: 36, color: _C.faint),
-                    SizedBox(height: 8),
-                    Text(
-                      'No skills added yet',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: _C.muted,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Type above or tap a suggestion to add your technical skills.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12, color: _C.faint),
-                    ),
-                    SizedBox(height: 12),
-                  ],
-                )
+            children: [
+              SizedBox(height: 12),
+              Icon(Icons.style_outlined, size: 36, color: _C.faint),
+              SizedBox(height: 8),
+              Text(
+                'No skills added yet',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: _C.muted,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                'Type above or tap a suggestion to add your technical skills.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, color: _C.faint),
+              ),
+              SizedBox(height: 12),
+            ],
+          )
               : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: _skills.map((skill) {
-                        return Container(
-                          padding: const EdgeInsets.fromLTRB(12, 6, 8, 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: _C.tealBorder),
-                            boxShadow: [
-                              BoxShadow(
-                                color: _C.teal.withValues(alpha: 0.08),
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                skill,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: _C.navy,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              InkWell(
-                                onTap: () => _removeSkill(skill),
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: const BoxDecoration(
-                                    color: _C.tealLight,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.close_rounded,
-                                    size: 14,
-                                    color: _C.teal,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _skills.map((skill) {
+                  return Container(
+                    padding: const EdgeInsets.fromLTRB(12, 6, 8, 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: _C.tealBorder),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _C.teal.withValues(alpha: 0.08),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    if (_skills.isNotEmpty) ...[
-                      const SizedBox(height: 12),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton.icon(
-                          onPressed: _clearAll,
-                          icon: const Icon(Icons.delete_sweep_outlined, size: 16, color: Colors.redAccent),
-                          label: const Text(
-                            'Clear All',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.redAccent),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          skill,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: _C.navy,
                           ),
                         ),
-                      ),
-                    ],
-                  ],
+                        const SizedBox(width: 6),
+                        InkWell(
+                          onTap: () => _removeSkill(skill),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              color: _C.tealLight,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close_rounded,
+                              size: 14,
+                              color: _C.teal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+              if (_skills.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed: _clearAll,
+                    icon: const Icon(Icons.delete_sweep_outlined, size: 16, color: Colors.redAccent),
+                    label: const Text(
+                      'Clear All',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.redAccent),
+                    ),
+                  ),
                 ),
+              ],
+            ],
+          ),
         ),
       ],
     );
