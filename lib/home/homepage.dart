@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../career_profile/career_profile_screen.dart';
 import '../components/custom_bottom_nav_bar.dart';
+import '../cv_builder_screens/convert_to_cv.dart';
 
 //import 'screens/cv_analyzer_screen.dart';
 //import 'screens/freelance_screen.dart';
@@ -53,14 +55,92 @@ class _HomepageState extends State<Homepage> {
     return email.contains('@') ? email.split('@').first : 'there';
   }
 
-  void _navigate(String screen, {Map<String, dynamic>? job}) {
-    // Modules can be connected as their screens are implemented
-    Get.snackbar(
-      screen.capitalizeFirst ?? screen,
-      'Opening $screen...',
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 2),
+  void _showSettingsSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE2E8F0),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Settings & Account',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: ink,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  leading: const Icon(Icons.person_outline, color: ink),
+                  title: const Text('Account Details'),
+                  subtitle: Text(user?.email ?? 'Logged in'),
+                  onTap: () => Navigator.pop(ctx),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.privacy_tip_outlined, color: ink),
+                  title: const Text('Privacy & Terms'),
+                  onTap: () => Navigator.pop(ctx),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.logout, color: Colors.redAccent),
+                  title: const Text('Log Out', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    await signOut();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
+  }
+
+  void _navigate(String screen, {Map<String, dynamic>? job}) {
+    switch (screen) {
+      case 'career':
+      case 'profile':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CareerProfileScreen()),
+        );
+        return;
+      case 'cv':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CVFromProfileScreen()),
+        );
+        return;
+      case 'settings':
+        _showSettingsSheet();
+        return;
+      default:
+        Get.snackbar(
+          screen.capitalizeFirst ?? screen,
+          'Opening $screen...',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+    }
   }
 
   @override
@@ -107,10 +187,8 @@ class _HomepageState extends State<Homepage> {
           setState(() {
             _currentNavIndex = index;
           });
-          const labels = ['Home', 'Jobs', 'Career', 'CV', 'Profile'];
-          if (index != 0) {
-            _navigate(labels[index].toLowerCase());
-          }
+          const labels = ['home', 'jobs', 'career', 'cv', 'profile'];
+          _navigate(labels[index]);
         },
       ),
     );
@@ -140,7 +218,7 @@ class _HomepageState extends State<Homepage> {
                 const Icon(Icons.chevron_right, size: 16, color: teal),
               ]),
             ),
-          if (trailing != null) trailing,
+          ?trailing,
         ],
       ),
     );
@@ -151,7 +229,7 @@ class _HomepageState extends State<Homepage> {
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: border),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
         ],
       );
 
@@ -207,6 +285,16 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
           ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () => _navigate('settings'),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: _cardDecoration(radius: 12),
+              child: const Icon(Icons.settings_outlined, size: 20, color: Color(0xFF111827)),
+            ),
+          ),
         ],
       ),
     );
@@ -225,7 +313,9 @@ class _HomepageState extends State<Homepage> {
     final int pct = (progress * 100).round();
 
     return _section(
-      child: Container(
+      child: GestureDetector(
+        onTap: () => _navigate('profile'),
+        child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         clipBehavior: Clip.antiAlias,
@@ -245,22 +335,28 @@ class _HomepageState extends State<Homepage> {
               child: Container(
                 width: 120,
                 height: 120,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: teal.withOpacity(0.12)),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: teal.withValues(alpha: 0.12)),
               ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
-                  const Icon(Icons.auto_awesome, size: 14, color: teal),
-                  const SizedBox(width: 6),
-                  Text('AI CAREER PROFILE',
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.8,
-                          color: teal.withOpacity(0.95))),
-                ]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [
+                      const Icon(Icons.auto_awesome, size: 14, color: teal),
+                      const SizedBox(width: 6),
+                      Text('AI CAREER PROFILE',
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.8,
+                              color: teal.withValues(alpha: 0.95))),
+                    ]),
+                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Colors.white70),
+                  ],
+                ),
                 const SizedBox(height: 12),
                 Text(role.toString(),
                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Colors.white)),
@@ -272,7 +368,7 @@ class _HomepageState extends State<Homepage> {
                       child: LinearProgressIndicator(
                         value: progress,
                         minHeight: 6,
-                        backgroundColor: Colors.white.withOpacity(0.15),
+                        backgroundColor: Colors.white.withValues(alpha: 0.15),
                         valueColor: const AlwaysStoppedAnimation(teal),
                       ),
                     ),
@@ -286,12 +382,13 @@ class _HomepageState extends State<Homepage> {
                   skillCount > 0
                       ? '$skillCount skills configured in your profile.'
                       : 'Add skills and career goals to get personalized AI matching.',
-                  style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.65)),
+                  style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.65)),
                 ),
               ],
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -590,7 +687,7 @@ class _HomepageState extends State<Homepage> {
         decoration: BoxDecoration(
           color: const Color(0xFFE6F9F7),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: teal.withOpacity(0.25)),
+          border: Border.all(color: teal.withValues(alpha: 0.25)),
         ),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Icon(Icons.auto_awesome, size: 18, color: teal),
@@ -635,7 +732,7 @@ class _HomepageState extends State<Homepage> {
                     decoration: BoxDecoration(
                       color: a.$3,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.black.withOpacity(0.04)),
+                      border: Border.all(color: Colors.black.withValues(alpha: 0.04)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
