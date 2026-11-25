@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'splash/splash_screen.dart';
-
+import 'cv_builder_screens/experience_screen.dart';
+import 'cv_builder_screens/education_screen.dart';
+import 'cv_builder_screens/certifications_screen.dart';
+import 'cv_builder_screens/convert_to_CV.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: CVFromProfileScreen(),
     );
   }
 }
