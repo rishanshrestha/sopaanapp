@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../authentication/login.dart';
 import '../career_profile/career_profile_screen.dart';
 import '../components/custom_bottom_nav_bar.dart';
+import '../settings/settings.dart';
 
 /// Standalone screen: pulls everything the user has added to their profile
 /// (skills, projects, education, experience, certifications) from Firestore
@@ -290,57 +291,9 @@ class _CVFromProfileScreenState extends State<CVFromProfileScreen> {
             icon: const Icon(Icons.settings_outlined, color: Color(0xFF111827)),
             tooltip: 'Settings',
             onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                backgroundColor: Colors.white,
-                builder: (ctx) {
-                  return SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 36,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE2E8F0),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Settings',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF0B1220),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          ListTile(
-                            leading: const Icon(Icons.person_outline),
-                            title: const Text('Account Details'),
-                            subtitle: Text(FirebaseAuth.instance.currentUser?.email ?? 'Not logged in'),
-                            onTap: () => Navigator.pop(ctx),
-                          ),
-                          const Divider(),
-                          ListTile(
-                            leading: const Icon(Icons.logout, color: Colors.redAccent),
-                            title: const Text('Log Out', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
-                            onTap: () async {
-                              Navigator.pop(ctx);
-                              await FirebaseAuth.instance.signOut();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
               );
             },
           ),

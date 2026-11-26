@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 
 import '../career_profile/career_profile_screen.dart';
 import '../components/custom_bottom_nav_bar.dart';
+import '../components/skill_section.dart';
 import '../cv_builder_screens/convert_to_cv.dart';
+import '../settings/settings.dart';
 
 //import 'screens/cv_analyzer_screen.dart';
 //import 'screens/freelance_screen.dart';
@@ -55,66 +57,6 @@ class _HomepageState extends State<Homepage> {
     return email.contains('@') ? email.split('@').first : 'there';
   }
 
-  void _showSettingsSheet() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE2E8F0),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Settings & Account',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: ink,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ListTile(
-                  leading: const Icon(Icons.person_outline, color: ink),
-                  title: const Text('Account Details'),
-                  subtitle: Text(user?.email ?? 'Logged in'),
-                  onTap: () => Navigator.pop(ctx),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.privacy_tip_outlined, color: ink),
-                  title: const Text('Privacy & Terms'),
-                  onTap: () => Navigator.pop(ctx),
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.logout, color: Colors.redAccent),
-                  title: const Text('Log Out', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
-                  onTap: () async {
-                    Navigator.pop(ctx);
-                    await signOut();
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void _navigate(String screen, {Map<String, dynamic>? job}) {
     switch (screen) {
       case 'career':
@@ -124,6 +66,12 @@ class _HomepageState extends State<Homepage> {
           MaterialPageRoute(builder: (_) => const CareerProfileScreen()),
         );
         return;
+      case 'skills':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const SkillsSectionDemoScreen()),
+        );
+        return;
       case 'cv':
         Navigator.push(
           context,
@@ -131,7 +79,10 @@ class _HomepageState extends State<Homepage> {
         );
         return;
       case 'settings':
-        _showSettingsSheet();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const SettingsScreen()),
+        );
         return;
       default:
         Get.snackbar(
@@ -218,7 +169,7 @@ class _HomepageState extends State<Homepage> {
                 const Icon(Icons.chevron_right, size: 16, color: teal),
               ]),
             ),
-          ?trailing,
+          if (trailing != null) trailing,
         ],
       ),
     );

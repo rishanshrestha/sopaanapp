@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../components/custom_bottom_nav_bar.dart';
+import '../components/skill_section.dart';
 import '../cv_builder_screens/certifications_screen.dart';
 import '../cv_builder_screens/education_screen.dart';
 import '../cv_builder_screens/experience_screen.dart';
+import '../settings/settings.dart';
 
 class CareerProfileScreen extends StatelessWidget {
   const CareerProfileScreen({super.key});
@@ -53,15 +55,62 @@ class CareerProfileScreen extends StatelessWidget {
       color: Color(0xFFF79009),
       bgColor: Color(0xFFFFF7ED),
     ),
+    _Section(
+      icon: Icons.psychology_outlined,
+      activeIcon: Icons.psychology_rounded,
+      label: 'Skills',
+      subtitle: 'Technical skills & competencies',
+      firestoreKey: 'skills',
+      color: Color(0xFF8B5CF6),
+      bgColor: Color(0xFFF5F3FF),
+    ),
   ];
+
+  List<String> _extractChips(_Section section, Map<String, dynamic>? profile) {
+    final raw = profile?[section.firestoreKey];
+    if (raw is! List || raw.isEmpty) return const [];
+
+    final chips = <String>[];
+    for (final item in raw) {
+      if (item is String) {
+        final trimmed = item.trim();
+        if (trimmed.isNotEmpty) chips.add(trimmed);
+      } else if (item is Map) {
+        switch (section.firestoreKey) {
+          case 'educationItems':
+            final deg = (item['degree'] ?? item['title'] ?? '').toString().trim();
+            final ins = (item['institution'] ?? item['school'] ?? '').toString().trim();
+            if (deg.isNotEmpty) chips.add(deg);
+            if (ins.isNotEmpty) chips.add(ins);
+            break;
+          case 'experience':
+            final role = (item['role'] ?? item['title'] ?? item['position'] ?? '').toString().trim();
+            final company = (item['company'] ?? item['organization'] ?? '').toString().trim();
+            if (role.isNotEmpty) chips.add(role);
+            if (company.isNotEmpty) chips.add(company);
+            break;
+          case 'certifications':
+            final title = (item['name'] ?? item['title'] ?? item['certificate'] ?? '').toString().trim();
+            final issuer = (item['issuer'] ?? item['organization'] ?? '').toString().trim();
+            final text = [title, issuer].where((s) => s.isNotEmpty).join(' — ');
+            if (text.isNotEmpty) chips.add(text);
+            break;
+          case 'skills':
+            final skill = (item['name'] ?? item['skill'] ?? item['title'] ?? '').toString().trim();
+            if (skill.isNotEmpty) chips.add(skill);
+            break;
+        }
+      }
+    }
+    return chips;
+  }
 
   Widget _buildSectionCard(
     BuildContext context,
     _Section section,
     Map<String, dynamic>? profile,
   ) {
-    final raw = profile?[section.firestoreKey];
-    final int count = raw is List ? raw.length : 0;
+    final chips = _extractChips(section, profile);
 
     return GestureDetector(
       onTap: () {
@@ -76,6 +125,9 @@ class CareerProfileScreen extends StatelessWidget {
           case 'certifications':
             screen = const CertificationsScreen();
             break;
+          case 'skills':
+            screen = const SkillsSectionDemoScreen();
+            break;
           default:
             return;
         }
@@ -85,87 +137,72 @@ class CareerProfileScreen extends StatelessWidget {
         );
       },
       child: Container(
+        width: double.infinity,
         margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: _white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(color: const Color(0xFFF0F2F5)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
+              blurRadius: 10,
               offset: const Offset(0, 2),
             ),
           ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon badge
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: section.bgColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(section.activeIcon, size: 22, color: section.color),
-            ),
-            const SizedBox(width: 14),
-            // Label + subtitle
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    section.label,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: _ink,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    section.subtitle,
-                    style: const TextStyle(fontSize: 12, color: _muted),
-                  ),
-                ],
-              ),
-            ),
-            // Count badge + chevron
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (count > 0)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: section.bgColor,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '$count added',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: section.color,
-                      ),
-                    ),
-                  )
-                else
-                  Text(
-                    'Add now',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: section.color,
-                    ),
+                Text(
+                  section.label,
+                  style: const TextStyle(
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w700,
+                    color: _ink,
                   ),
-                const SizedBox(height: 4),
-                const Icon(Icons.chevron_right, size: 18, color: _muted),
+                ),
+                const Icon(Icons.chevron_right, size: 20, color: _muted),
               ],
             ),
+            const SizedBox(height: 10),
+            if (chips.isNotEmpty)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: chips
+                    .map(
+                      (label) => Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0FDF9),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: const Color(0xFFA7F3D0)),
+                        ),
+                        child: Text(
+                          label,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF0F766E),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              )
+            else
+              Text(
+                section.subtitle,
+                style: const TextStyle(fontSize: 12.5, color: _muted),
+              ),
           ],
         ),
       ),
@@ -198,7 +235,42 @@ class CareerProfileScreen extends StatelessWidget {
       name = 'User';
     }
 
-    final location = (profile?['location'] ?? profile?['city'] ?? 'Kathmandu').toString();
+    // Location: only display when user has filled it in
+    final rawLoc = profile?['location'] ?? profile?['city'];
+    final String location = (rawLoc != null && rawLoc.toString().trim().isNotEmpty)
+        ? rawLoc.toString().trim()
+        : '';
+
+    // Degree · Institution: only display when user has added education
+    final educationList = profile?['educationItems'];
+    String subtitle = '';
+    if (educationList is List && educationList.isNotEmpty) {
+      final first = educationList.first;
+      if (first is Map) {
+        final deg = (first['degree'] ?? first['title'] ?? '').toString().trim();
+        final ins = (first['institution'] ?? first['school'] ?? '').toString().trim();
+        if (deg.isNotEmpty && ins.isNotEmpty) {
+          subtitle = '$deg · $ins';
+        } else if (deg.isNotEmpty) {
+          subtitle = deg;
+        } else if (ins.isNotEmpty) {
+          subtitle = ins;
+        }
+      } else if (first is String && first.trim().isNotEmpty) {
+        subtitle = first.trim();
+      }
+    } else if (profile?['degree'] != null || profile?['university'] != null) {
+      final deg = (profile?['degree'] ?? '').toString().trim();
+      final uni = (profile?['university'] ?? '').toString().trim();
+      if (deg.isNotEmpty && uni.isNotEmpty) {
+        subtitle = '$deg · $uni';
+      } else if (deg.isNotEmpty) {
+        subtitle = deg;
+      } else if (uni.isNotEmpty) {
+        subtitle = uni;
+      }
+    }
+
     final photoUrl = profile?['photoUrl'] ??
         profile?['photoURL'] ??
         profile?['profilePicture'] ??
@@ -246,7 +318,7 @@ class CareerProfileScreen extends StatelessWidget {
                         child: Image.network(
                           photoUrl.toString(),
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Center(
+                          errorBuilder: (context, error, stackTrace) => Center(
                             child: Text(
                               _initials(name),
                               style: const TextStyle(
@@ -303,38 +375,40 @@ class CareerProfileScreen extends StatelessWidget {
               letterSpacing: -0.3,
             ),
           ),
-          const SizedBox(height: 6),
-          // Degree · Institution
-          Text(
-            subtitle,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 13.5,
-              fontWeight: FontWeight.w500,
-              color: _muted,
-            ),
-          ),
-          const SizedBox(height: 6),
-          // Location pin
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.location_on_outlined,
-                size: 15,
+          if (subtitle.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w500,
                 color: _muted,
               ),
-              const SizedBox(width: 4),
-              Text(
-                location,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+            ),
+          ],
+          if (location.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 15,
                   color: _muted,
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 4),
+                Text(
+                  location,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: _muted,
+                  ),
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: 20),
           // Profile Completion banner
           Container(
@@ -401,69 +475,6 @@ class CareerProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showSettingsSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE2E8F0),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Settings & Account',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: _ink,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ListTile(
-                  leading: const Icon(Icons.person_outline, color: _ink),
-                  title: const Text('Account Details'),
-                  subtitle: Text(FirebaseAuth.instance.currentUser?.email ?? 'Logged in'),
-                  onTap: () => Navigator.pop(ctx),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.privacy_tip_outlined, color: _ink),
-                  title: const Text('Privacy & Terms'),
-                  onTap: () => Navigator.pop(ctx),
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.logout, color: Colors.redAccent),
-                  title: const Text('Log Out', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
-                  onTap: () async {
-                    Navigator.pop(ctx);
-                    await FirebaseAuth.instance.signOut();
-                    if (context.mounted) {
-                      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -488,7 +499,12 @@ class CareerProfileScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings_outlined, color: _ink),
             tooltip: 'Settings',
-            onPressed: () => _showSettingsSheet(context),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
           ),
         ],
       ),
