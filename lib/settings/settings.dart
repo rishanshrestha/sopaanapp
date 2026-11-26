@@ -332,7 +332,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Image.network(
                         photoUrl.toString(),
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Center(
+                        errorBuilder: (context, error, stackTrace) => Center(
                           child: Text(
                             _initials(name),
                             style: const TextStyle(

@@ -169,7 +169,7 @@ class _HomepageState extends State<Homepage> {
                 const Icon(Icons.chevron_right, size: 16, color: teal),
               ]),
             ),
-          if (trailing != null) trailing,
+          ?trailing,
         ],
       ),
     );
