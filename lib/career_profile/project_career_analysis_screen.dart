@@ -27,6 +27,27 @@ class _ProjectCareerAnalysisScreenState
     return FirebaseFirestore.instance.collection('users').doc(uid);
   }
 
+  List<Map<String, dynamic>> _convertProjectsToCVEvidence(List<String> projects) {
+    final list = <Map<String, dynamic>>[];
+    for (final raw in projects) {
+      final parts = raw.split('—');
+      final title = parts.isNotEmpty ? parts[0].trim() : raw.trim();
+      final desc = parts.length > 1 ? parts[1].trim() : '';
+
+      final bullets = <String>[
+        'Architected and implemented $title providing scalable, modular core functionality.',
+        if (desc.isNotEmpty) 'Engineered solution for $desc applying best software engineering standards.',
+        'Executed complete lifecycle from requirements analysis, interface design to clean state and error handling.',
+      ];
+
+      list.add({
+        'title': title,
+        'bullets': bullets,
+      });
+    }
+    return list;
+  }
+
   // AI Rule-based analyzer mapping keywords to domains, strengths and roadmap
   Map<String, dynamic> _analyzeProjects(
     List<String> projects,
@@ -541,6 +562,119 @@ class _ProjectCareerAnalysisScreenState
                           ],
                         ),
                       ),
+                      const SizedBox(height: 22),
+
+                      // CV Evidence Conversion Card
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Projects Converted to CV Evidence',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: _ink,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEEF2FF),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              'STAR Format',
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: _indigo),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Builder(builder: (_) {
+                        final cvEvidenceList = _convertProjectsToCVEvidence(projects);
+                        if (cvEvidenceList.isEmpty) {
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: _white,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(color: const Color(0xFFF0F2F5)),
+                            ),
+                            child: const Text(
+                              'Add projects to see them automatically translated into actionable CV bullet points.',
+                              style: TextStyle(fontSize: 13, color: _muted),
+                            ),
+                          );
+                        }
+                        return Column(
+                          children: [
+                            for (final ev in cvEvidenceList)
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: _white,
+                                  borderRadius: BorderRadius.circular(18),
+                                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.02),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.work_outline, size: 16, color: _indigo),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            ev['title'].toString(),
+                                            style: const TextStyle(
+                                              fontSize: 14.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: _ink,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    for (final b in (ev['bullets'] as List))
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 6),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('› ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: _indigo,
+                                                    fontSize: 14)),
+                                            Expanded(
+                                              child: Text(
+                                                b.toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 12.5,
+                                                  height: 1.35,
+                                                  color: Color(0xFF334155),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
                       const SizedBox(height: 24),
 
                       // CTA

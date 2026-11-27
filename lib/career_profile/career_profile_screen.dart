@@ -9,6 +9,7 @@ import '../cv_builder_screens/education_screen.dart';
 import '../cv_builder_screens/experience_screen.dart';
 import '../cv_builder_screens/add_my_project.dart';
 import '../settings/settings.dart';
+import '../view/repo/user_repository.dart';
 import 'project_career_analysis_screen.dart';
 
 class CareerProfileScreen extends StatelessWidget {
@@ -547,6 +548,15 @@ class CareerProfileScreen extends StatelessWidget {
                       _buildUserProfileCard(profile, completionPct > 0 ? completionPct : 0.78),
 
                       // ── Profile completion card ──────────────────
+                      StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        stream: _doc!.snapshots(),
+                        builder: (_, syncSnap) {
+                          if (syncSnap.hasData && syncSnap.data?.data() != null) {
+                            UserRepository().syncToAdminPanel(syncSnap.data!.data()!);
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(18),
