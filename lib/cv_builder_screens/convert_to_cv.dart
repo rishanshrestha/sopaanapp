@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../authentication/login.dart';
+import '../career_profile/career_profile_screen.dart';
+import '../components/custom_bottom_nav_bar.dart';
+import '../settings/settings.dart';
 
 /// Standalone screen: pulls everything the user has added to their profile
 /// (skills, projects, education, experience, certifications) from Firestore
@@ -272,9 +276,72 @@ class _CVFromProfileScreenState extends State<CVFromProfileScreen> {
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF0B1220))),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_outline, color: Color(0xFF111827)),
+            tooltip: 'Career Profile',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CareerProfileScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined, color: Color(0xFF111827)),
+            tooltip: 'Settings',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: doc == null
-          ? const Center(child: Text('Log in to build your CV.'))
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.lock_outline_rounded, size: 54, color: Color(0xFF94A3B8)),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Log in to build your CV',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF0B1220),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Sign in to pull your experience, education, skills, and certifications into a live CV.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13, color: Color(0xFF667085)),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const Login()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF16B8A6),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('Go to Login', style: TextStyle(fontWeight: FontWeight.w600)),
+                    ),
+                  ],
+                ),
+              ),
+            )
           : StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: doc.snapshots(),
         builder: (context, snap) {
@@ -324,6 +391,9 @@ class _CVFromProfileScreenState extends State<CVFromProfileScreen> {
             ),
           );
         },
+      ),
+      bottomNavigationBar: const CustomBottomNavBar(
+        currentIndex: 3,
       ),
     );
   }

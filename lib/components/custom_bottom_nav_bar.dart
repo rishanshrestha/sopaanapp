@@ -1,14 +1,53 @@
 import 'package:flutter/material.dart';
+import '../career_profile/career_profile_screen.dart';
+import '../cv_builder_screens/convert_to_cv.dart';
+import '../home/homepage.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
-  final ValueChanged<int> onTap;
+  final ValueChanged<int>? onTap;
 
   const CustomBottomNavBar({
     super.key,
     required this.currentIndex,
-    required this.onTap,
+    this.onTap,
   });
+
+  /// Standard navigation handler across all screens with the bottom nav bar.
+  static void navigateTo(BuildContext context, int index, {int currentIndex = -1}) {
+    if (index == currentIndex) return;
+
+    switch (index) {
+      case 0: // Home
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const Homepage()),
+          (route) => false,
+        );
+        break;
+      case 1: // Jobs
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Opening Jobs...'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        break;
+      case 2: // Career
+      case 4: // Profile
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CareerProfileScreen()),
+        );
+        break;
+      case 3: // CV
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CVFromProfileScreen()),
+        );
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +88,7 @@ class CustomBottomNavBar extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 16,
             offset: const Offset(0, -4),
           ),
@@ -66,7 +105,13 @@ class CustomBottomNavBar extends StatelessWidget {
               final item = items[index];
 
               return InkWell(
-                onTap: () => onTap(index),
+                onTap: () {
+                  if (onTap != null) {
+                    onTap!(index);
+                  } else {
+                    navigateTo(context, index, currentIndex: currentIndex);
+                  }
+                },
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 child: Padding(
@@ -90,7 +135,7 @@ class CustomBottomNavBar extends StatelessWidget {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF2DD4BF).withOpacity(0.3),
+                                    color: const Color(0xFF2DD4BF).withValues(alpha: 0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 3),
                                   ),
