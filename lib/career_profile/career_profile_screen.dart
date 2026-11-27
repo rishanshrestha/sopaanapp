@@ -7,7 +7,9 @@ import '../components/skill_section.dart';
 import '../cv_builder_screens/certifications_screen.dart';
 import '../cv_builder_screens/education_screen.dart';
 import '../cv_builder_screens/experience_screen.dart';
+import '../cv_builder_screens/add_my_project.dart';
 import '../settings/settings.dart';
+import 'project_career_analysis_screen.dart';
 
 class CareerProfileScreen extends StatelessWidget {
   const CareerProfileScreen({super.key});
@@ -63,6 +65,15 @@ class CareerProfileScreen extends StatelessWidget {
       firestoreKey: 'skills',
       color: Color(0xFF8B5CF6),
       bgColor: Color(0xFFF5F3FF),
+    ),
+    _Section(
+      icon: Icons.terminal_outlined,
+      activeIcon: Icons.terminal_rounded,
+      label: 'Projects',
+      subtitle: 'Apps, research & technical projects',
+      firestoreKey: 'projects',
+      color: Color(0xFF0D9488),
+      bgColor: Color(0xFFCCFBF1),
     ),
   ];
 
@@ -127,6 +138,9 @@ class CareerProfileScreen extends StatelessWidget {
             break;
           case 'skills':
             screen = const SkillsSectionDemoScreen();
+            break;
+          case 'projects':
+            screen = const ProjectsScreen();
             break;
           default:
             return;
@@ -604,6 +618,74 @@ class CareerProfileScreen extends StatelessWidget {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // ── AI Project-to-Career Analysis Action Card ──
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ProjectCareerAnalysisScreen(),
+                            ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(18),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF0FDF4),
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(color: const Color(0xFFBBF7D0)),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFDCFCE7),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.auto_awesome,
+                                  color: Color(0xFF16A34A),
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              const Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'AI Project-to-Career Analysis',
+                                      style: TextStyle(
+                                        fontSize: 14.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF14532D),
+                                      ),
+                                    ),
+                                    SizedBox(height: 2),
+                                    Text(
+                                      'Evaluate role readiness & skill gaps from your projects',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF166534),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(
+                                Icons.chevron_right,
+                                color: Color(0xFF16A34A),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
 

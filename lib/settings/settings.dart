@@ -8,6 +8,8 @@ import '../components/skill_section.dart';
 import '../cv_builder_screens/certifications_screen.dart';
 import '../cv_builder_screens/education_screen.dart';
 import '../cv_builder_screens/experience_screen.dart';
+import '../cv_builder_screens/add_my_project.dart';
+import '../career_profile/project_career_analysis_screen.dart';
 import 'personal_information_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -65,6 +67,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       firestoreKey: 'skills',
       color: Color(0xFF8B5CF6),
       bgColor: Color(0xFFF5F3FF),
+    ),
+    _ProfileSectionConfig(
+      icon: Icons.terminal_rounded,
+      label: 'Projects',
+      subtitle: 'Apps, research & technical projects',
+      firestoreKey: 'projects',
+      color: Color(0xFF0D9488),
+      bgColor: Color(0xFFCCFBF1),
     ),
   ];
 
@@ -155,6 +165,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         break;
       case 'skills':
         screen = const SkillsSectionDemoScreen();
+        break;
+      case 'projects':
+        screen = const ProjectsScreen();
         break;
       default:
         return;
@@ -537,7 +550,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               iconColor: const Color(0xFF0D9488),
               iconBg: const Color(0xFFE6F9F7),
               title: 'AI Preferences',
-              onTap: () => _showInfoMessage('AI Preferences'),
+              subtitle: 'AI Project-to-Career & recommendations',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const ProjectCareerAnalysisScreen(),
+                  ),
+                );
+              },
             ),
           ]),
           const SizedBox(height: 22),

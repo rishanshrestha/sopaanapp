@@ -382,7 +382,7 @@ class SkillsSectionDemoScreen extends StatefulWidget {
 }
 
 class _SkillsSectionDemoScreenState extends State<SkillsSectionDemoScreen> {
-  List<String> _skills = ['Flutter', 'Dart', 'Firebase'];
+  List<String> _skills = [];
   bool _loading = true;
   bool _saving = false;
 
